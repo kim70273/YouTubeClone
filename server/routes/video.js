@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-//const { Video } = require("../models/Video");
+const { Video } = require("../models/Video");
 
 const { auth } = require("../middleware/auth");
 const multer = require("multer");
@@ -75,6 +75,18 @@ router.post('/thumbnail', (req, res) => {
         size: '320x240',//썸네일 사이즈
         filename: 'thumbnail-%b.png'//확장자를 뺀 파일 네임
     })
+}); 
+
+router.post('/uploadVideo', (req, res) => {
+    //비디오 정보들을 저장한다.(몽고디비에 저장하는것)
+    const video = new Video(req.body);//클라이언트에서 보낸 모든게 req.body안에 있다.
+
+    //모든 정보들이 몽고디비에 저장 됨
+    video.save((err, doc) => {
+        if(err) return res.json({success: false, err})
+        res.status(200).json({success:true})
+    })
+
 }); 
 
 
