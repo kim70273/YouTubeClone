@@ -4,6 +4,8 @@ const router = express.Router();
 
 const { auth } = require("../middleware/auth");
 const multer = require("multer");
+const ffmpeg = require("fluent-ffmpeg");
+const { compareSync } = require('bcrypt');
 
 let storage = multer.diskStorage({
     destination: (req, file, cd) => {//파일을 올리면 어디다가 저장할지
@@ -36,7 +38,43 @@ router.post('/uploadfiles', (req, res) => {// index.js에서 먼저 video로 간
         return res.json({success:true, url: res.req.file.path, fileName: res.req.file.filename});
         //url로 파일이 저장된 경로를 클라이언트에 보내준다.
     })
+}); 
 
+router.post('/thumbnail', (req, res) => {
+    //썸네일 생성하고 비디오 러닝타임도 가져오기.
+
+    let filePath = "";
+    let fileDuration = "";
+
+    //비디오 정보 가져오기
+    ffmpeg.ffprobe(req.body.url, (err, metadata) => {//ffprobe는 ffmpeg받을때 같이 받아진것.
+        console.log(metadata);
+        console.log(metadata.format.duration);
+        fileDuration = metadata.format.duration;
+    });
+
+    //썸네일 생성
+    ffmpeg(req.body.url)//클라이언트에서 받은 비디오 저장 경로
+    .on('filenames', (filenames) => {// 썸네일의 파일 이름을 생성한다.
+        console.log('Will generate ' + filenames.join(', '));
+        console.log(filenames);
+
+        filePath = "uploads/thumbnails/" + filenames[0]
+    })
+    .on('end', () => {//썸네일 다 생성 후 에 무엇을 할지.
+        console.log('Screenshots taken');
+        return res.json({ success: true, url:filePath, fileDuration: fileDuration});
+    })
+    .on('error', (err) => {
+        console.log(err);
+        return res.json({success: false, err});
+    })
+    .screenshots({
+        count: 3,//3개의 썸네일을 찍을 수 있다.
+        folder: 'uploads/thumbnails',
+        size: '320x240',//썸네일 사이즈
+        filename: 'thumbnail-%b.png'//확장자를 뺀 파일 네임
+    })
 }); 
 
 

@@ -23,6 +23,9 @@ const VideoUploadPage = () => {
     const [description, setDescription] = useState("");
     const [Private, setPrivate] = useState(0);//pricate:0, public:1
     const [category, setCategory] = useState("Film & Animation");//옵션 고르기전에 처음에 값.
+    const [FilePath, setFilePath] = useState("");
+    const [Duration, setDuration] = useState("");
+    const [ThumbnailPath, setThubnailPath] = useState("");
 
     const onChange = (e) => {
         const {target: {name}} = e;
@@ -55,9 +58,25 @@ const VideoUploadPage = () => {
         Axios.post('/api/video/uploadfiles', formData, config)//서버쪽에 video.js 라우터를 만들어준다.
         .then( response => {//서버에 요청을하고 반응을 받아온다.
             if(response.data.success){
+                let variable = {
+                    url: response.data.url,//서버에서 받은 url
+                    fileName: response.data.fileName,
+                }
+                
+                setFilePath(response.data.url);
+
+                Axios.post('api/video/thumbnail', variable)//이 라우터도 또 따로 만들어 줘야 됨.
+                .then(response => {
+                    if(response.data.success){
+                        setDuration(response.data.fileDuration);
+                        setThubnailPath(response.data.url);
+                    } else{
+                        alert('썸네일 생성에 실패했습니다.');
+                    }
+                })
 
             } else{
-                alert('비디오 업로드를 실패했습니다.')
+                alert('비디오 업로드를 실패했습니다.');
             }
         })
         //서버가 있는 쪽에 요청을 보낸다.
@@ -88,9 +107,12 @@ const VideoUploadPage = () => {
                     </Dropzone>
 
                     {/* 가져온 비디오의 썸네일 부분 */}
+                    { ThumbnailPath && 
                     <div>
-                        <img src alt />
+                    <img src={`http://localhost:5000/${ThumbnailPath}`} alt="thumbnail" />
                     </div>
+                    }
+                    
                 </div>
 
                 <br />
