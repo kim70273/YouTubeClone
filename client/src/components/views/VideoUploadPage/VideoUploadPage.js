@@ -3,7 +3,6 @@ import { Typography, Button, Form, message, Input, Icon} from "antd";//css를 �
 import Dropzone from "react-dropzone";
 import Axios from "axios";
 import { useSelector } from "react-redux";//유저 정보 가져오기 위해
-import { response } from "express";
 
 const { Title } = Typography;
 const { TextArea } = Input;

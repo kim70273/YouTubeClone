@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const videoSchema = mongoose.Schema({
 
     writer: {
-        type: Schema.Type.ObjectId, //이렇게 쓰면 유저스키마의 해당아이디의 모든정보를 가져올 수 있다.
+        type: Schema.Types.ObjectId, //이렇게 쓰면 유저스키마의 해당아이디의 모든정보를 가져올 수 있다.
         ref: 'User'//User 모델에서 불러온다.
     },
     title: {
