@@ -89,5 +89,19 @@ router.post('/uploadVideo', (req, res) => {
 
 }); 
 
+//getVideos
+router.get('/getVideos', (req, res) => {
+    //비디오를 DB에서 가져와서 클라이언트에 보낸다.
+
+    // 비디오 콜렉션아넹 보든 비디오를 찾는다.
+    //.populate('witer') 해줘야 writer의 모든 정보를 가져올 수 있다.
+    Video.find()
+    .populate('witer')
+    .exec((err, videos) => {
+        if(err) return res.status(400).send(err);
+        res.status(200).json({success:true, videos});//성공과 비디오정보들을 다 보내준다.
+    })
+}); 
+
 
 module.exports = router;
