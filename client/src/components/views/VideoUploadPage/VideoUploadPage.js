@@ -49,7 +49,7 @@ const VideoUploadPage = (props) => {
 
     const onDrop = (files) => {
         //files에 올린 파일의 정보들이 들어가 있다.
-        let formData = new FormData;
+        let formData = new FormData();
         const config = {
             header: {'content-type': 'multipart/form-data'}
         }
