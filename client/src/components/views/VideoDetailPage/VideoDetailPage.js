@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, List, Avatar} from 'antd';
 import Axios from 'axios';
+import SideVideo from'./Sections/SideVideo';
 
 const VideoDetailPage = (props) => {
     //해당 비디오의 아이디는 url에 나타나 있다.
@@ -45,7 +46,8 @@ const VideoDetailPage = (props) => {
                     </div>
                 </Col>
                 <Col lg={6} xs={24}>
-                    Side Video
+                    {/*Side Video 깔끔하게하기 위해 컴포넌트하나를 만듬. */}
+                    <SideVideo />
                 </Col>
     
             </Row>
