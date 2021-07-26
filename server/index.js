@@ -35,6 +35,7 @@ app.use(cookieParser());
 
 app.use('/api/users', require('./routes/users'));
 app.use('/api/video', require('./routes/video'));//요청이 우선 이쪽으로 온다. 그리고 video 라우터로 감.
+app.use('/api/subscribe', require('./routes/subscribe'));
 
 
 //use this to show the image you have in node js server to client (react js)

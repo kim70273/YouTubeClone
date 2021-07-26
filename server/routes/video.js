@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { Video } = require("../models/Video");
-
-const { auth } = require("../middleware/auth");
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
-const { compareSync } = require('bcrypt');
 
 let storage = multer.diskStorage({
     destination: (req, file, cd) => {//파일을 올리면 어디다가 저장할지

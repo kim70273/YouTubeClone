@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, List, Avatar} from 'antd';
 import Axios from 'axios';
-import SideVideo from'./Sections/SideVideo';
+import SideVideo from './Sections/SideVideo';
+import Subscribe from './Sections/Subscribe';
 
 const VideoDetailPage = (props) => {
     //해당 비디오의 아이디는 url에 나타나 있다.
@@ -26,6 +27,7 @@ const VideoDetailPage = (props) => {
         })
     },[]);
 
+    //기능이 많아서 코드가 길어지는 부분은 따로 컴포넌트를 생성한다.
     if(VideoDetail.writer){
         return (
             <Row gutter={[16, 16]}>
@@ -34,7 +36,7 @@ const VideoDetailPage = (props) => {
     
                         <video style={{width: '100%'}} src={`http://localhost:5000/${VideoDetail.filePath}`} controls />
     
-                        <List.Item actions>
+                        <List.Item actions={[<Subscribe userTo={VideoDetail.writer._id} />]} >
                             <List.Item.Meta
                             avatar={<Avatar src={VideoDetail.writer.image} />}
                             title={VideoDetail.writer.name}
