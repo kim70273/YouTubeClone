@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Video } = require("../models/Video");
+const { Subscriber } = require("../models/Subscriber");
 const multer = require("multer");
 const ffmpeg = require("fluent-ffmpeg");
 
@@ -107,6 +108,31 @@ router.get('/getVideos', (req, res) => {
     .exec((err, videos) => {
         if(err) return res.status(400).send(err);
         res.status(200).json({success:true, videos});//성공과 비디오정보들을 다 보내준다.
+    })
+}); 
+
+router.post('/getSubscriptionVideos', (req, res) => {
+    
+    //자신의 아이디를 가지고 구독하는 사람들을 찾는다
+    Subscriber.find({ userfrom: req.body.userfrom })
+    .exec((err, subscriberInfo ) => {//쿼리를 실행시키고 찾은 정보를 가져온다.
+        if(err) return res.status(400).send(err);
+
+        //subscriberInfo에 내가 구독하는 사람들(userTo)의 정보가 들어 있다.
+        let subscribedUser = [];
+        subscriberInfo.forEach((subscriber) => {
+            subscribedUser.push(subscriber.userTo);
+        })
+
+        //찾은 사람들의 비디오를 가지고 온다.
+        //2명 이상의 정보의 것을 찾을때는 $in을 사용해 준다.
+        Video.find({ writer: { $in: subscribedUser}})
+        .populate('writer')//writer의 id뿐만 아니라 이미지 이름 등 모든정보를 가져온다.
+        .exec((err, videos) => {
+            if(err) return res.status(400).send(err);
+            return res.status(200).json({success:true, videos})
+        })
+
     })
 }); 
 

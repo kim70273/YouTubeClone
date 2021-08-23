@@ -7,8 +7,8 @@ const Subscribe = ({userTo}) => {
     const [Subscribed, setSubscribed] = useState(false);
 
     useEffect(() => {
-        let variable = {userTo}
-        Axios.post('/api/subscribe/subscribeNumber', variable)
+        let subscribVariable = {userTo}
+        Axios.post('/api/subscribe/subscribeNumber', subscribVariable)
         .then( response => {
             if(response.data.success){
                 setSubscribeNumber(response.data.subscriberNumber);
@@ -18,7 +18,7 @@ const Subscribe = ({userTo}) => {
         })
 
         //내가 구독하고 있는지 아닌지 정보를 불러와야한다.(useFrom의 정보도 필요하다.)
-        let subscribedVariable = {userTo,
+        let subscribedVariable = {userTo: userTo,
                                    userFrom:localStorage.getItem('userId')}
         Axios.post('/api/subscribe/subscribed', subscribedVariable)
         .then( response => {

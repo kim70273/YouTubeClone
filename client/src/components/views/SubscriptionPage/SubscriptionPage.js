@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { Card, Icon, Avatar, Col, Typography, Row} from "antd";
 import Axios from 'axios';
 import moment from 'moment';
 const { Title } = Typography;
 const { Meta } = Card;
 
-function LandingPage() {
+const SubscriptionPage = () => {
+
     const [Video, setVideo] = useState([]);
 
-    //몽고DB에서 비디오 정보들을 가져온다
+    //몽고DB에서 구독한 비디오 정보들을 가져온다
+    //모든 비디오르 가져오는것이 아니고 조건에 맞는 비디오를 가져와야하기 때문에
+    //조건에 맞는 값을 넣어줘야한다.
+    
     useEffect(() => {
-        Axios.get('/api/video/getVideos')
+        const subscriptionVariables = {
+            userFrom : localStorage.getItem('userId')
+        };
+        Axios.post('/api/video/getSubscriptionVideos', subscriptionVariables)
         .then(response => {
             if(response.data.success){
                 setVideo(response.data.videos);
@@ -19,7 +26,7 @@ function LandingPage() {
             }
         })
     }, []);//배열이 비워져있으므로 처음 들어왔을때 한번만 실행된다.
-    
+
     const renderCards = Video.map((video, index) => {
 
         let minutes = Math.floor(video.duration / 60);
@@ -45,11 +52,10 @@ function LandingPage() {
         <span style={{marginLeft: '3rem'}}>{video.views} views</span> - <span>{moment(video.createdAt).format("MMM Do YY")}</span>
     </Col> 
     })
-    
     return (
         <>
             <div style={{ width: '85%', margin: '3rem auto'}}>
-                <Title level={2}> Recommended </Title>
+                <Title level={2}> Subscription Videos </Title>
                 <hr />
                 <Row gutter={[32,16]}>         
                     {renderCards}  
@@ -59,4 +65,4 @@ function LandingPage() {
     )
 }
 
-export default LandingPage
+export default SubscriptionPage;

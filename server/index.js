@@ -23,7 +23,7 @@ const connect = mongoose.connect(config.mongoURI,
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
-app.use(cors())
+//app.use(cors())
 
 //to not get any deprecation warning or error
 //support parsing of application/x-www-form-urlencoded post data
@@ -36,6 +36,8 @@ app.use(cookieParser());
 app.use('/api/users', require('./routes/users'));
 app.use('/api/video', require('./routes/video'));//요청이 우선 이쪽으로 온다. 그리고 video 라우터로 감.
 app.use('/api/subscribe', require('./routes/subscribe'));
+app.use('/api/comment', require('./routes/comment'));
+app.use('/api/like', require('./routes/like'));
 
 
 //use this to show the image you have in node js server to client (react js)
